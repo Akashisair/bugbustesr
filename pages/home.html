@@ -1,0 +1,414 @@
+import React, { useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { AlertTriangle, Search, BookOpen, Shield, Mountain, Leaf, Camera, X } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+export default function Home() {
+  const [showCamera, setShowCamera] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(null);
+  const videoRef = useRef(null);
+  const streamRef = useRef(null);
+  const [isCameraReady, setIsCameraReady] = useState(false);
+
+  const features = [
+    {
+      icon: Search,
+      title: "Browse Species",
+      description: "Explore venomous snakes, plants, and insects in your region",
+      link: createPageUrl("Browse"),
+      color: "from-emerald-500 to-green-600"
+    },
+    {
+      icon: AlertTriangle,
+      title: "Emergency Guide",
+      description: "Quick access to first-aid instructions and survival tips",
+      link: createPageUrl("Emergency"),
+      color: "from-red-500 to-orange-600",
+      isEmergency: true
+    },
+    {
+      icon: BookOpen,
+      title: "Learn & Identify",
+      description: "Detailed information about dangerous species and habitats",
+      link: createPageUrl("Browse"),
+      color: "from-blue-500 to-cyan-600"
+    }
+  ];
+
+  const stats = [
+    { icon: Shield, label: "Species Database", value: "30+" },
+    { icon: Mountain, label: "Regions Covered", value: "All Hilly Areas" },
+    { icon: Leaf, label: "100% Offline", value: "No Internet Needed" }
+  ];
+
+  const startCamera = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: 'environment' },
+        audio: false 
+      });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+      setIsCameraReady(true);
+    } catch (err) {
+      console.error("Error accessing camera:", err);
+      alert("Could not access camera. Please check permissions.");
+    }
+  };
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    setIsCameraReady(false);
+  };
+
+  const capturePhoto = () => {
+    if (!videoRef.current || !isCameraReady) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(videoRef.current, 0, 0);
+
+    const imageData = canvas.toDataURL('image/jpeg');
+    setCapturedImage(imageData);
+    stopCamera();
+  };
+
+  const handleCameraOpen = () => {
+    setShowCamera(true);
+    setCapturedImage(null);
+    setTimeout(() => startCamera(), 100);
+  };
+
+  const handleCameraClose = () => {
+    setShowCamera(false);
+    stopCamera();
+    setCapturedImage(null);
+  };
+
+  React.useEffect(() => {
+    return () => stopCamera();
+  }, []);
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section with Forest Background Image */}
+      <section className="relative bg-gradient-to-br from-emerald-900 via-green-800 to-teal-900 text-white overflow-hidden">
+        {/* Background Forest Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68f3a65bae147ea031e50f86/94c2548f5_download.jpeg"
+            alt="Forest background"
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/80 via-green-800/70 to-teal-900/80" />
+        </div>
+
+        {/* Pattern overlay */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          }} />
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <div className="inline-flex items-center gap-2 bg-amber-500 bg-opacity-20 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-amber-400 border-opacity-30">
+              <AlertTriangle className="w-5 h-5 text-amber-300" />
+              <span className="text-amber-100 font-medium">Offline Safety Companion</span>
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight drop-shadow-lg">
+              Stay Safe in the
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-orange-300 to-amber-300">
+                Wild Outdoors
+              </span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-emerald-100 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+              Your offline guide to identifying venomous species and getting emergency first-aid help in remote areas
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center flex-wrap">
+              <Link to={createPageUrl("Browse")}>
+                <Button size="lg" className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white px-8 py-6 text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                  <Search className="w-5 h-5 mr-2" />
+                  Browse Species
+                </Button>
+              </Link>
+              
+              <Button 
+                size="lg" 
+                onClick={handleCameraOpen}
+                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-8 py-6 text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+              >
+                <Camera className="w-5 h-5 mr-2" />
+                Capture Photo
+              </Button>
+              
+              <Link to={createPageUrl("Emergency")}>
+                <Button 
+                  size="lg" 
+                  className="relative bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-8 py-6 text-lg shadow-2xl hover:shadow-red-500/50 transition-all duration-300 hover:scale-105 border-2 border-red-400 animate-pulse"
+                >
+                  <AlertTriangle className="w-5 h-5 mr-2 animate-bounce" />
+                  Emergency Guide
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-4 w-4 bg-red-500"></span>
+                  </span>
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Wave separator */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="rgb(236 253 245)"/>
+          </svg>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-12 bg-white relative">
+        {/* Subtle tree pattern */}
+        <div className="absolute inset-0 opacity-3">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='%23065f46'%3E%3Cpath d='M50 10L50 30M50 30L45 35M50 30L55 35M50 30L50 90' stroke='%23065f46' stroke-width='0.5' fill='none'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundSize: '100px 100px'
+          }} />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 + 0.3 }}
+              >
+                <Card className="p-6 text-center border-2 hover:border-emerald-400 transition-all duration-300 hover:shadow-lg bg-white">
+                  <stat.icon className="w-12 h-12 mx-auto mb-4 text-emerald-600" />
+                  <p className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</p>
+                  <p className="text-gray-600 font-medium">{stat.label}</p>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 relative overflow-hidden">
+        {/* Tree silhouettes in background */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+            <polygon points="200,800 200,400 130,480 200,400 270,480" fill="#065f46" />
+            <rect x="195" y="480" width="10" height="320" fill="#065f46" />
+            
+            <polygon points="800,800 800,350 720,440 800,350 880,440" fill="#065f46" />
+            <rect x="795" y="440" width="10" height="360" fill="#065f46" />
+            
+            <polygon points="1000,800 1000,450 945,510 1000,450 1055,510" fill="#065f46" />
+            <rect x="995" y="510" width="10" height="290" fill="#065f46" />
+          </svg>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Everything You Need for Safe Adventures
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Comprehensive offline database and emergency protocols at your fingertips
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Link to={feature.link}>
+                  <Card className={`p-8 h-full hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer group border-2 bg-white ${
+                    feature.isEmergency 
+                      ? 'border-red-400 hover:border-red-500 ring-2 ring-red-200 hover:ring-red-300 animate-pulse hover:animate-none' 
+                      : 'hover:border-emerald-400'
+                  }`}>
+                    <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg ${
+                      feature.isEmergency ? 'ring-4 ring-red-200' : ''
+                    }`}>
+                      <feature.icon className={`w-8 h-8 text-white ${feature.isEmergency ? 'animate-bounce' : ''}`} />
+                    </div>
+                    <h3 className={`text-2xl font-bold mb-3 ${feature.isEmergency ? 'text-red-700' : 'text-gray-900'}`}>
+                      {feature.title}
+                      {feature.isEmergency && (
+                        <span className="ml-2 inline-flex items-center px-2 py-1 text-xs font-bold text-red-700 bg-red-100 rounded-full">
+                          URGENT
+                        </span>
+                      )}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                  </Card>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section with Forest Background */}
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <img 
+            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68f3a65bae147ea031e50f86/94c2548f5_download.jpeg"
+            alt="Forest background"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/90 via-green-600/90 to-teal-600/90" />
+        </div>
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+          >
+            <AlertTriangle className="w-16 h-16 mx-auto mb-6 text-amber-300" />
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Always Be Prepared
+            </h2>
+            <p className="text-xl text-emerald-100 mb-8">
+              Download our species data and emergency guides before your next trek
+            </p>
+            <Link to={createPageUrl("Browse")}>
+              <Button size="lg" className="bg-white text-emerald-700 hover:bg-emerald-50 px-8 py-6 text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <Search className="w-5 h-5 mr-2" />
+                Explore Database
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Camera Dialog */}
+      <Dialog open={showCamera} onOpenChange={handleCameraClose}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Camera className="w-5 h-5" />
+              Identify Species by Photo
+            </DialogTitle>
+          </DialogHeader>
+          
+          {!capturedImage ? (
+            <div>
+              <div className="relative aspect-[4/3] bg-black rounded-lg overflow-hidden mb-4">
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                {!isCameraReady && (
+                  <div className="absolute inset-0 flex items-center justify-center text-white">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white" />
+                      <span>Starting camera...</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex justify-between gap-3">
+                <Button
+                  variant="outline"
+                  onClick={handleCameraClose}
+                  className="flex-1"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Cancel
+                </Button>
+                <Button
+                  onClick={capturePhoto}
+                  disabled={!isCameraReady}
+                  className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
+                >
+                  <Camera className="w-4 h-4 mr-2" />
+                  Capture Photo
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="relative aspect-[4/3] bg-black rounded-lg overflow-hidden mb-4">
+                <img
+                  src={capturedImage}
+                  alt="Captured"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+                <p className="text-amber-800 text-sm">
+                  <strong>Note:</strong> Automated species identification requires AI integration. 
+                  For now, use this photo to manually compare with species in the database, 
+                  or save it to show to an expert.
+                </p>
+              </div>
+              
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setCapturedImage(null)}
+                  className="flex-1"
+                >
+                  Retake Photo
+                </Button>
+                <Button
+                  onClick={handleCameraClose}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                >
+                  Browse Database
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

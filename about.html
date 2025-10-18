@@ -1,0 +1,163 @@
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Shield, Heart, Mountain, Leaf, AlertTriangle, Users } from "lucide-react";
+import { motion } from "framer-motion";
+
+export default function About() {
+  const features = [
+    {
+      icon: Shield,
+      title: "100% Offline Access",
+      description: "All species data and emergency guides work without internet connection, perfect for remote areas."
+    },
+    {
+      icon: AlertTriangle,
+      title: "Life-Saving Information",
+      description: "Quick access to first-aid protocols and emergency procedures when every second counts."
+    },
+    {
+      icon: Mountain,
+      title: "Comprehensive Database",
+      description: "Detailed information about venomous snakes, plants, and insects found in hilly regions."
+    },
+    {
+      icon: Leaf,
+      title: "Prevention Focus",
+      description: "Learn how to avoid dangerous encounters and stay safe while exploring nature."
+    },
+    {
+      icon: Heart,
+      title: "Easy to Use",
+      description: "Simple, intuitive interface designed for quick access during stressful situations."
+    },
+    {
+      icon: Users,
+      title: "For Everyone",
+      description: "Perfect for hikers, trekkers, tourists, and anyone venturing into the wilderness."
+    }
+  ];
+
+  return (
+    <div className="min-h-screen py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-16"
+        >
+          <div className="inline-flex items-center gap-2 bg-emerald-100 px-4 py-2 rounded-full mb-6">
+            <Mountain className="w-5 h-5 text-emerald-700" />
+            <span className="text-emerald-700 font-medium">About TrekGuardian</span>
+          </div>
+          
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+            Your Offline Safety
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-600">
+              Companion in the Wild
+            </span>
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+            TrekGuardian is a comprehensive offline safety app designed to help hikers, trekkers, and nature enthusiasts identify dangerous species and respond to emergencies in remote areas.
+          </p>
+        </motion.div>
+
+        {/* Mission Statement */}
+        <Card className="p-8 md:p-12 mb-16 bg-gradient-to-br from-emerald-50 to-green-50 border-2 border-emerald-200">
+          <div className="max-w-3xl mx-auto text-center">
+            <AlertTriangle className="w-16 h-16 mx-auto mb-6 text-emerald-600" />
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Mission</h2>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              Every year, thousands of people venture into nature without proper knowledge of the dangers they might face. TrekGuardian was created to bridge this gap by providing instant access to critical safety information, even when you're miles away from civilization and without internet connectivity.
+            </p>
+          </div>
+        </Card>
+
+        {/* Features Grid */}
+        <div className="mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-12">
+            What Makes TrekGuardian Essential
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="p-6 h-full hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-emerald-400">
+                  <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center mb-4">
+                    <feature.icon className="w-7 h-7 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* How It Works */}
+        <Card className="p-8 md:p-12 mb-16 bg-white border-2">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">How It Works</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-emerald-600">1</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Browse Species</h3>
+              <p className="text-gray-600">
+                Explore our comprehensive database of venomous snakes, plants, and insects with detailed images and information.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-emerald-600">2</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Identify & Learn</h3>
+              <p className="text-gray-600">
+                Use visual identification to recognize dangerous species and learn about their habitats and behavior patterns.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-emerald-600">3</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Emergency Response</h3>
+              <p className="text-gray-600">
+                Access step-by-step first-aid instructions and emergency protocols instantly when needed most.
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Safety Disclaimer */}
+        <Card className="p-8 bg-amber-50 border-2 border-amber-200">
+          <div className="flex items-start gap-4">
+            <AlertTriangle className="w-8 h-8 text-amber-600 flex-shrink-0 mt-1" />
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Important Safety Notice</h3>
+              <p className="text-gray-700 leading-relaxed mb-3">
+                TrekGuardian is designed as an educational tool and emergency reference guide. While we strive for accuracy, this app should not replace professional medical advice or treatment.
+              </p>
+              <p className="text-gray-700 leading-relaxed font-medium">
+                Always seek immediate professional medical help in case of venomous bites or stings. Call emergency services (112 or 108) as soon as possible.
+              </p>
+            </div>
+          </div>
+        </Card>
+
+        {/* Call to Action */}
+        <div className="text-center mt-16">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Stay Wild. Stay Safe.</h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Make TrekGuardian your trusted companion on every adventure.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

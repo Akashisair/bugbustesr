@@ -1,0 +1,63 @@
+{
+  "name": "Species",
+  "type": "object",
+  "properties": {
+    "common_name": {
+      "type": "string",
+      "description": "Common name of the species"
+    },
+    "scientific_name": {
+      "type": "string",
+      "description": "Scientific name"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "snake",
+        "plant",
+        "insect"
+      ],
+      "description": "Type of species"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Image URL"
+    },
+    "habitat": {
+      "type": "string",
+      "description": "Common habitat and regions found"
+    },
+    "symptoms": {
+      "type": "string",
+      "description": "Symptoms if bitten or touched"
+    },
+    "first_aid": {
+      "type": "string",
+      "description": "First-aid treatment steps"
+    },
+    "danger_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "extreme"
+      ],
+      "description": "Danger level"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description"
+    },
+    "prevention_tips": {
+      "type": "string",
+      "description": "How to avoid encounters"
+    }
+  },
+  "required": [
+    "common_name",
+    "type",
+    "danger_level"
+  ]
+}
+

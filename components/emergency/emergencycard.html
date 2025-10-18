@@ -1,0 +1,56 @@
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Separator } from "@/components/ui/separator";
+import { Activity, Leaf, Bug, AlertTriangle } from "lucide-react";
+
+export default function EmergencyCard({ title, type, symptoms, immediateActions }) {
+  const typeIcons = {
+    snake: Activity,
+    plant: Leaf,
+    insect: Bug
+  };
+
+  const typeColors = {
+    snake: "from-red-500 to-orange-500",
+    plant: "from-green-500 to-emerald-500",
+    insect: "from-amber-500 to-yellow-500"
+  };
+
+  const TypeIcon = typeIcons[type] || AlertTriangle;
+  const colorGradient = typeColors[type] || "from-gray-500 to-gray-600";
+
+  return (
+    <Card className="p-6 border-2 hover:shadow-lg transition-all">
+      <div className="flex items-center gap-4 mb-4">
+        <div className={`w-14 h-14 bg-gradient-to-br ${colorGradient} rounded-xl flex items-center justify-center`}>
+          <TypeIcon className="w-8 h-8 text-white" />
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900">{title}</h3>
+      </div>
+
+      <Separator className="my-4" />
+
+      <Alert className="mb-4 bg-orange-50 border-orange-200">
+        <AlertTriangle className="w-4 h-4 text-orange-600" />
+        <AlertDescription>
+          <strong>Common Symptoms:</strong> {symptoms}
+        </AlertDescription>
+      </Alert>
+
+      <div>
+        <h4 className="font-bold text-lg text-gray-900 mb-3">Immediate Actions:</h4>
+        <ol className="space-y-2">
+          {immediateActions.map((action, index) => (
+            <li key={index} className="flex gap-3">
+              <span className="flex-shrink-0 w-6 h-6 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-sm font-bold">
+                {index + 1}
+              </span>
+              <span className="text-gray-700">{action}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </Card>
+  );
+}

@@ -1,0 +1,263 @@
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { 
+  AlertTriangle, 
+  Phone, 
+  Activity, 
+  Shield, 
+  Clock,
+  Heart,
+  CheckCircle2,
+  XCircle
+} from "lucide-react";
+import { motion } from "framer-motion";
+
+import EmergencyCard from "../components/emergency/EmergencyCard";
+import FirstAidSteps from "../components/emergency/FirstAidSteps";
+
+export default function Emergency() {
+  const emergencyContacts = [
+    { name: "Emergency Services", number: "112" },
+    { name: "Ambulance", number: "108" },
+    { name: "Medical Helpline", number: "104" }
+  ];
+
+  const generalSteps = [
+    {
+      title: "Stay Calm",
+      description: "Panic increases heart rate and spreads venom faster. Take deep breaths and stay composed.",
+      icon: Heart,
+      color: "text-blue-600"
+    },
+    {
+      title: "Move to Safety",
+      description: "Get away from the source of danger immediately but move slowly and carefully.",
+      icon: Shield,
+      color: "text-purple-600"
+    },
+    {
+      title: "Call for Help",
+      description: "Contact emergency services (112 or 108) as soon as possible.",
+      icon: Phone,
+      color: "text-red-600"
+    },
+    {
+      title: "Keep Still",
+      description: "Minimize movement to slow the spread of venom through your body.",
+      icon: Activity,
+      color: "text-orange-600"
+    }
+  ];
+
+  const dosList = [
+    "Keep the affected area below heart level",
+    "Remove jewelry and tight clothing near the bite",
+    "Mark the bite location with a pen",
+    "Note the time of the bite",
+    "Take a photo of the species if safe to do so",
+    "Keep the victim calm and warm",
+    "Wash the wound gently with soap and water"
+  ];
+
+  const dontsList = [
+    "Do NOT apply a tourniquet",
+    "Do NOT cut the wound or try to suck out venom",
+    "Do NOT apply ice directly to the bite",
+    "Do NOT give alcohol or caffeine",
+    "Do NOT let the person eat or drink anything",
+    "Do NOT try to catch or kill the creature",
+    "Do NOT waste time on ineffective treatments"
+  ];
+
+  return (
+    <div className="min-h-screen py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Emergency Header */}
+        <div className="bg-gradient-to-r from-red-600 via-orange-600 to-red-600 text-white rounded-2xl p-8 mb-8 shadow-2xl">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
+                <AlertTriangle className="w-10 h-10" />
+              </div>
+              <div>
+                <h1 className="text-4xl md:text-5xl font-bold">Emergency Guide</h1>
+                <p className="text-red-100 text-lg">Life-saving first-aid protocols</p>
+              </div>
+            </div>
+            <Alert className="bg-white bg-opacity-10 border-white border-opacity-30 text-white">
+              <AlertTriangle className="w-5 h-5" />
+              <AlertDescription className="text-lg font-medium">
+                In case of emergency, always call professional medical help immediately: <strong>112</strong> or <strong>108</strong>
+              </AlertDescription>
+            </Alert>
+          </motion.div>
+        </div>
+
+        {/* Emergency Contacts */}
+        <Card className="p-6 mb-8 bg-red-50 border-red-200 border-2">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Phone className="w-6 h-6 text-red-600" />
+            Emergency Contact Numbers
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {emergencyContacts.map((contact, index) => (
+              <motion.a
+                key={contact.name}
+                href={`tel:${contact.number}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white p-4 rounded-lg border-2 border-red-300 hover:border-red-500 hover:shadow-lg transition-all duration-200 text-center group"
+              >
+                <p className="text-gray-600 font-medium mb-1">{contact.name}</p>
+                <p className="text-3xl font-bold text-red-600 group-hover:scale-110 transition-transform">
+                  {contact.number}
+                </p>
+              </motion.a>
+            ))}
+          </div>
+        </Card>
+
+        {/* General Emergency Steps */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <Clock className="w-8 h-8 text-emerald-600" />
+            Immediate Actions (First 10 Minutes)
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {generalSteps.map((step, index) => (
+              <motion.div
+                key={step.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card className="p-6 h-full hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 hover:border-emerald-400">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+                      <step.icon className={`w-6 h-6 ${step.color}`} />
+                    </div>
+                    <Badge className="text-lg">{index + 1}</Badge>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{step.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{step.description}</p>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Do's and Don'ts */}
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          <Card className="p-6 bg-green-50 border-green-200 border-2">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <CheckCircle2 className="w-6 h-6 text-green-600" />
+              DO These Things
+            </h2>
+            <Separator className="my-4" />
+            <ul className="space-y-3">
+              {dosList.map((item, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+
+          <Card className="p-6 bg-red-50 border-red-200 border-2">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <XCircle className="w-6 h-6 text-red-600" />
+              DON'T Do These
+            </h2>
+            <Separator className="my-4" />
+            <ul className="space-y-3">
+              {dontsList.map((item, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <XCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                  <span className="text-gray-700">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </div>
+
+        {/* Specific Emergency Protocols */}
+        <div className="space-y-6">
+          <h2 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+            <Activity className="w-8 h-8 text-emerald-600" />
+            Specific Emergency Protocols
+          </h2>
+          
+          <EmergencyCard
+            title="Snake Bite Protocol"
+            type="snake"
+            symptoms="Pain and swelling at bite site, nausea, difficulty breathing, blurred vision, numbness"
+            immediateActions={[
+              "Call emergency services immediately (112/108)",
+              "Keep the victim calm and lying down",
+              "Remove any jewelry or tight clothing near the bite",
+              "Keep the bitten limb below heart level",
+              "Mark the edge of swelling with a pen and note the time",
+              "Do NOT try to catch or kill the snake",
+              "Do NOT apply ice or tourniquets"
+            ]}
+          />
+
+          <FirstAidSteps
+            title="Poisonous Plant Contact"
+            type="plant"
+            steps={[
+              {
+                step: "Remove from exposure",
+                detail: "Move away from the plant immediately. Remove contaminated clothing carefully."
+              },
+              {
+                step: "Wash thoroughly",
+                detail: "Rinse affected skin with soap and cool water for at least 15 minutes."
+              },
+              {
+                step: "Don't scratch",
+                detail: "Scratching spreads the irritant. Keep the area clean and covered."
+              },
+              {
+                step: "Seek medical help",
+                detail: "If symptoms worsen or involve eyes, mouth, or large skin areas, get medical attention."
+              }
+            ]}
+          />
+
+          <EmergencyCard
+            title="Insect Sting Protocol"
+            type="insect"
+            symptoms="Pain, swelling, redness at sting site; severe reactions may include difficulty breathing, rapid pulse, dizziness"
+            immediateActions={[
+              "Remove the stinger if visible (scrape, don't squeeze)",
+              "Wash the area with soap and water",
+              "Apply a cold compress to reduce swelling",
+              "Take an antihistamine if available",
+              "Watch for allergic reactions (difficulty breathing, swelling of face/throat)",
+              "Call emergency services if severe reaction occurs",
+              "Keep the affected area elevated"
+            ]}
+          />
+        </div>
+
+        {/* Final Warning */}
+        <Alert className="mt-8 bg-amber-50 border-amber-300 border-2">
+          <AlertTriangle className="w-5 h-5 text-amber-600" />
+          <AlertDescription className="text-lg text-gray-700">
+            <strong>Important:</strong> This guide provides general first-aid information. Always seek professional medical help in emergencies. Different species may require specific treatments. When in doubt, call emergency services.
+          </AlertDescription>
+        </Alert>
+      </div>
+    </div>
+  );
+}
